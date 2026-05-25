@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShieldHer — Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+	<link rel="icon" type="image/x-icon" href="https://img.icons8.com/fluency/48/shield.png">
+	 <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f4f9;
+            min-height: 100vh;
+            color: #1a1a2e;
+        }
+
+        .nav {
+            background: white;
+            border-bottom: 1px solid #ebebf0;
+            padding: 14px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 17px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: #534AB7;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px 6px 8px;
+            background: #f5f4f9;
+            border: 1px solid #ebebf0;
+            border-radius: 999px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .avatar {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #AFA9EC;
+            color: #26215C;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            border: 1px solid #ebebf0;
+            border-radius: 8px;
+            background: white;
+            color: #666;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .logout-btn:hover { background: #f5f4f9; }
+
+        .main {
+            max-width: 820px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ebebf0;
+            border-radius: 16px;
+            padding: 24px;
+        }
+
+        .card-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .drop-zone {
+            border: 1.5px dashed #c5c0e8;
+            border-radius: 12px;
+            padding: 40px 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .drop-zone:hover {
+            background: #f7f6ff;
+            border-color: #534AB7;
+        }
+
+        .drop-icon {
+            width: 48px;
+            height: 48px;
+            background: #EEEDFE;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            color: #534AB7;
+            font-size: 22px;
+        }
+
+        .drop-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #1a1a2e;
+            margin-bottom: 5px;
+        }
+
+        .drop-sub {
+            font-size: 13px;
+            color: #aaa;
+        }
+
+        .preview-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 14px;
+            background: #f9f9fc;
+            border: 1px solid #ebebf0;
+            border-radius: 10px;
+            margin-top: 14px;
+        }
+
+        .preview-thumb {
+            width: 52px;
+            height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #ebebf0;
+        }
+
+        .preview-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+
+        .preview-meta {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        .remove-btn {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #bbb;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 4px;
+            line-height: 1;
+            border-radius: 6px;
+        }
+
+        .remove-btn:hover { color: #e24b4a; background: #fcebeb; }
+
+        .search-btn {
+            width: 100%;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #534AB7;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.15s;
+        }
+
+        .search-btn:hover { background: #3C3489; }
+
+        .search-btn:disabled {
+            background: #f0f0f5;
+            color: #bbb;
+            cursor: not-allowed;
+        }
+
+        .loader {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            padding: 13px 16px;
+            background: #EEEDFE;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #3C3489;
+        }
+
+        .spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #AFA9EC;
+            border-top-color: #534AB7;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .empty-state {
+            text-align: center;
+            padding: 44px 20px;
+            color: #bbb;
+        }
+
+        .empty-state i {
+            font-size: 40px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+        }
+
+        .ev-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border: 1px solid #ebebf0;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: background 0.15s;
+        }
+
+        .ev-item:hover { background: #fafafa; }
+
+        .ev-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .ev-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+
+        .ev-date {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 3px;
+        }
+
+        .badge {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-safe    { background: #EAF3DE; color: #27500A; }
+        .badge-found   { background: #FAECE7; color: #712B13; }
+        .badge-similar { background: #FAEEDA; color: #633806; }
+        .badge-ai      { background: #FBEAF0; color: #72243E; }
+        .badge-unknown { background: #f0f0f5; color: #888; }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-brand">
+        <div class="brand-icon"><i class="ti ti-shield-check"></i></div>
+        ShieldHer
+    </div>
+    <div class="nav-right">
+        <div class="user-pill">
+            <div class="avatar" id="avatarInitials">?</div>
+            <span id="userName"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="ti ti-logout" style="font-size:14px"></i> Logout
+        </button>
+    </div>
+</nav>
+
+<div class="main">
+
+    <!-- Upload card -->
+    <div class="card">
+        <div class="card-label">Photo check</div>
+
+        <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+            <div class="drop-icon"><i class="ti ti-cloud-upload"></i></div>
+            <div class="drop-title">Drop your photo here, or click to browse</div>
+            <div class="drop-sub">JPG, PNG, WEBP &nbsp;&middot;&nbsp; Max 5 MB</div>
+        </div>
+
+        <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="handleFile(this)">
+
+        <div class="preview-row" id="previewRow" style="display:none">
+            <img class="preview-thumb" id="previewThumb" src="" alt="Preview">
+            <div>
+                <div class="preview-name" id="previewName"></div>
+                <div class="preview-meta" id="previewMeta"></div>
+            </div>
+            <button class="remove-btn" onclick="clearFile()" title="Remove">
+                <i class="ti ti-x"></i>
+            </button>
+        </div>
+
+        <div class="loader" id="loader">
+            <div class="spinner"></div>
+            Searching the internet — this may take a few seconds...
+        </div>
+
+        <button class="search-btn" id="searchBtn" onclick="uploadAndSearch()" disabled>
+            <i class="ti ti-search"></i> Run check
+        </button>
+    </div>
+
+    <!-- Results card -->
+    <div class="card">
+        <div class="card-label">Results</div>
+        <div id="evidenceList">
+            <div class="empty-state">
+                <i class="ti ti-photo-search"></i>
+                <p>Upload a photo to see your results here</p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const API = 'http://localhost:5098/api';
+    const userId = localStorage.getItem('userId');
+    if (!userId) window.location.href = 'index.html';
+
+    const name = localStorage.getItem('userName') || 'User';
+    document.getElementById('userName').textContent = 'Hi, ' + name;
+    document.getElementById('avatarInitials').textContent =
+        name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
+
+    function handleFile(input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('previewThumb').src = e.target.result;
+            document.getElementById('previewName').textContent = file.name;
+            document.getElementById('previewMeta').textContent =
+                (file.size / 1024).toFixed(0) + ' KB';
+            document.getElementById('previewRow').style.display = 'flex';
+            document.getElementById('dropZone').style.display = 'none';
+            document.getElementById('searchBtn').disabled = false;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function clearFile() {
+        document.getElementById('fileInput').value = '';
+        document.getElementById('previewRow').style.display = 'none';
+        document.getElementById('dropZone').style.display = 'block';
+        document.getElementById('searchBtn').disabled = true;
+    }
+
+    async function uploadAndSearch() {
+        const file = document.getElementById('fileInput').files[0];
+        if (!file) return;
+        document.getElementById('loader').style.display = 'flex';
+        document.getElementById('searchBtn').disabled = true;
+        const formData = new FormData();
+        formData.append('file', file);
+        try {
+            const res = await fetch(`${API}/photo/upload/${userId}`, {
+                method: 'POST', body: formData
+            });
+            if (res.ok) { clearFile(); loadEvidence(); }
+            else { alert('Upload failed. Please try again.'); }
+        } catch (e) {
+            alert('Cannot reach server. Make sure the app is running.');
+        } finally {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('searchBtn').disabled = false;
+        }
+    }
+
+    async function loadEvidence() {
+        try {
+            const res = await fetch(`${API}/photo/evidence/${userId}`);
+            const data = await res.json();
+            const list = document.getElementById('evidenceList');
+            if (!data.length) {
+                list.innerHTML = `<div class="empty-state">
+                    <i class="ti ti-photo-search"></i>
+                    <p>Upload a photo to see your results here</p>
+                </div>`;
+                return;
+            }
+            list.innerHTML = data.map(e => {
+                const m = meta(e.status);
+                const d = e.createdAt
+                    ? new Date(e.createdAt).toLocaleDateString('en-GB', {
+                        day: 'numeric', month: 'short', year: 'numeric'
+                      })
+                    : 'Just now';
+                return `<div class="ev-item">
+                    <div class="ev-icon" style="background:${m.bg}">
+                        <i class="ti ${m.icon}" style="color:${m.color}"></i>
+                    </div>
+                    <div>
+                        <div class="ev-title">${e.platform || 'Unknown'}</div>
+                        <div class="ev-date">${d}</div>
+                    </div>
+                    <span class="badge ${m.badge}">${m.label}</span>
+                </div>`;
+            }).join('');
+        } catch (e) { console.error(e); }
+    }
+
+    function meta(status) {
+        switch (status) {
+            case 'SAFE':
+                return { icon:'ti-shield-check', color:'#27500A', bg:'#EAF3DE', badge:'badge-safe', label:'Safe' };
+            case 'FOUND':
+                return { icon:'ti-alert-triangle', color:'#712B13', bg:'#FAECE7', badge:'badge-found', label:'Found online' };
+            case 'SIMILAR':
+                return { icon:'ti-eye', color:'#633806', bg:'#FAEEDA', badge:'badge-similar', label:'Similar found' };
+            case 'AI_GENERATED':
+                return { icon:'ti-robot', color:'#72243E', bg:'#FBEAF0', badge:'badge-ai', label:'AI generated' };
+            default:
+                return { icon:'ti-help', color:'#888', bg:'#f0f0f5', badge:'badge-unknown', label: status };
+        }
+    }
+
+    function logout() {
+        localStorage.clear();
+        window.location.href = 'index.html';
+    }
+
+    loadEvidence();
+</script>
+</body>
+</html>
