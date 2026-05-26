@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SportZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link th:href="@{/css/home.css}" rel="stylesheet">
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+  </head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Dashboard -->
+<div class="dashboard" id="dashboard">
+  <div class="dash-icon">🏆</div>
+  <div class="dash-title">Welcome to SportZone!</div>
+  <div class="dash-sub">You are successfully logged in</div>
+  <div class="dash-card">
+    <div class="dash-name" id="dash-name">-</div>
+    <div class="dash-email" id="dash-email">-</div>
+    <div class="dash-phone" id="dash-phone">-</div>
+  </div>
+  <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+</div>
+
+<!-- DB Modal -->
+<div class="db-modal" id="dbModal">
+  <div class="db-box">
+    <h3>🗄️ Users Table (localStorage)</h3>
+    <div id="dbContent"></div>
+    <button class="close-db" onclick="closeDB()">Close</button>
+  </div>
+</div>
+
+<!-- Main Card -->
+<div class="container" id="mainCard">
+
+  <!-- LEFT -->
+  <div class="left-panel">
+    <div class="big-circle"></div>
+    <div class="small-circle"></div>
+    <div>
+      <div class="brand-logo">Sport<span>Zone</span></div>
+      <div class="brand-tagline">⚡ Your Ultimate Sports Destination</div>
+    </div>
+    <div>
+      <div class="left-headline">Play Hard.<br>Shop Smart.</div>
+      <p class="left-sub">Top brands. Best prices. Fast delivery — right to your doorstep.</p>
+      <div class="pill-tags">
+        <span class="pill">🏏 Cricket</span>
+        <span class="pill">⚽ Football</span>
+        <span class="pill">🏸 Badminton</span>
+        <span class="pill">🏃 Running</span>
+        <span class="pill">🧘 Fitness</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right-panel">
+    <div class="tabs">
+      <button class="tab-btn active" id="tab-login" onclick="switchTab('login')">Sign In</button>
+      <button class="tab-btn" id="tab-register" onclick="switchTab('register')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <div class="form-panel active" id="login">
+
+      <!-- ✅ Error message from Spring -->
+      <div th:if="${loginError}" class="error-msg" th:text="${loginError}"></div>
+
+      <form th:action="@{/login}" method="post">
+        <div class="form-title">Welcome back! 👋</div>
+        <div class="form-sub">Sign in to your SportZone account</div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <span class="icon">📧</span>
+            <input type="email" name="email" id="loginEmail" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" name="password" id="loginPass" placeholder="Enter your password" required />
+            <button type="button" class="eye-btn" onclick="togglePass('loginPass',this)">👁️</button>
+          </div>
+        </div>
+        <div class="forgot"><a href="#">Forgot Password?</a></div>
+        <button type="submit" class="submit-btn">Sign In →</button>
+        <p class="terms">No account? <a href="#" onclick="switchTab('register')">Register here</a></p>
+      </form>
+    </div>
+
+    <!-- REGISTER FORM -->
+    <div class="form-panel" id="register">
+
+      <!-- ✅ Error message from Spring -->
+      <div th:if="${registerError}" class="error-msg" th:text="${registerError}"></div>
+
+      <form th:action="@{/register}" method="post">
+        <div class="form-title">Join SportZone 🏆</div>
+        <div class="form-sub">Create your free account today</div>
+        <div class="two-col">
+          <div class="form-group">
+            <label>First Name</label>
+            <div class="input-wrap">
+              <span class="icon">👤</span>
+              <input type="text" name="firstName" id="regFirst" placeholder="Karthik" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <div class="input-wrap">
+              <span class="icon">👤</span>
+              <input type="text" name="lastName" id="regLast" placeholder="Kumar" required />
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <span class="icon">📧</span>
+            <input type="email" name="email" id="regEmail" placeholder="you@example.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <div class="input-wrap">
+            <span class="icon">📱</span>
+            <input type="tel" name="phone" id="regPhone" placeholder="+91 9876543210" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" name="password" id="regPass" placeholder="Min. 6 characters" required />
+            <button type="button" class="eye-btn" onclick="togglePass('regPass',this)">👁️</button>
+          </div>
+        </div>
+        <button type="submit" class="submit-btn">Create Account 🚀</button>
+        <p class="terms">By registering, you agree to our <a href="#">Terms</a> &amp; <a href="#">Privacy Policy</a></p>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<!-- ✅ Active tab restore when Spring returns error -->
+<script th:inline="javascript">
+  var activeTab = /*[[${activeTab}]]*/ 'login';
+  if (activeTab && activeTab !== 'login') {
+    switchTab(activeTab);
+  }
+</script>
+
+<script th:src="@{/js/home.js}"></script>
+</body>
+</html>

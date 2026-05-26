@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SportZone – Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet"/>
+<link th:href="@{/css/main.css}" rel="stylesheet">
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+</head>
+<body>
+
+<!-- ══ HEADER ══ -->
+<header class="header">
+  <button class="menu-btn" onclick="toggleSidebar()" title="Menu">☰</button>
+  <div class="logo">Sport<span style="-webkit-text-fill-color:#fff">Zone</span><span class="logo-dot"></span></div>
+
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Search cricket bats, football boots, gym gear…" autocomplete="off" oninput="liveSearch(this.value)"/>
+    <span class="s-icon">🔍</span>
+    <div class="search-drop" id="searchDrop">
+      <div class="sd-item"><em>🏏</em> Cricket Bats <span class="sd-tag">Trending</span></div>
+      <div class="sd-item"><em>⚽</em> Football Boots</div>
+      <div class="sd-item"><em>🏸</em> Badminton Rackets</div>
+      <div class="sd-item"><em>🥊</em> Boxing Gloves</div>
+      <div class="sd-item"><em>🏊</em> Swimming Gear</div>
+      <div class="sd-item"><em>🏋️</em> Gym Equipment <span class="sd-tag">New</span></div>
+      <div class="sd-item"><em>👟</em> Running Shoes</div>
+    </div>
+  </div>
+
+  <div class="hd-right">
+    <button class="icon-btn" title="Wishlist" onclick="window.location.href='/like'">🤍<span class="notif-dot"></span></button>
+    <!-- ✅ Single cart button - /cart redirect -->
+    <button class="icon-btn" title="Cart" onclick="window.location.href='/cart'">
+      🛒<span class="cart-badge" id="cartCount">0</span>
+    </button>
+
+    <button class="icon-btn" title="Notifications">🔔</button>
+
+    <div class="profile-pill" tabindex="0">
+      <div class="profile-info">
+        <div class="pname" id="headerName" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+      <div class="profile-drop">
+        <div class="pd-head">
+          <div class="av2" th:text="${user.firstName.substring(0,1)}">U</div>
+          <div>
+            <div class="pd-name" th:text="${user.firstName + ' ' + user.lastName}">User Name</div>
+            <div class="pd-email" th:text="${user.email}">user@email.com</div>
+          </div>
+        </div>
+        <div class="pd-item"><span>👤</span> My Profile</div>
+        <div class="pd-item" onclick="window.location.href='/my-orders'"><span>📦</span> My Orders</div>
+        <div class="pd-item" onclick="window.location.href='/like'"><span>🤍</span> Wishlist</div>
+        <div class="pd-item"><span>⚙️</span> Settings</div>
+        <div class="pd-divider"></div>
+        <a class="pd-item pd-logout" th:href="@{/logout}"><span>🚪</span> Logout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══ LAYOUT ══ -->
+<div class="layout">
+
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar" id="sidebar">
+
+	<div class="sb-section">
+	  <div class="sb-label">Menu</div>
+	  <a class="nav-link active" href="#" onclick="scrollToTop(); return false;"><span class="ni">🏠</span> Home</a>
+	  <a class="nav-link" href="#" onclick="scrollToSection('productGrid'); return false;"><span class="ni">🔥</span> Trending <span class="nbadge">12</span></a>
+	  <a class="nav-link" href="#" onclick="scrollToSection('flashSale'); return false;"><span class="ni">⚡</span> Flash Sale <span class="nbadge">5</span></a>
+	  <a class="nav-link" href="#" onclick="scrollToSection('newGrid'); return false;"><span class="ni">🆕</span> New Arrivals <span class="new-tag">NEW</span></a>
+	  <a class="nav-link" href="#" onclick="scrollToSection('featCollections'); return false;"><span class="ni">💎</span> Premium</a>
+	  <a class="nav-link" href="/like"><span class="ni">🤍</span> Wishlist</a>
+	  <a class="nav-link" href="/my-orders"><span class="ni">📦</span> My Orders</a>  <!-- ✅ FIXED -->
+	</div>
+
+    <div class="sb-divider"></div>
+
+	<div class="sb-section">
+	  <div class="sb-label">Sports</div>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=cricket]'),'cricket'); scrollToProducts(); return false;"><span class="ni">🏏</span> Cricket</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=football]'),'football'); scrollToProducts(); return false;"><span class="ni">⚽</span> Football</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=badminton]'),'badminton'); scrollToProducts(); return false;"><span class="ni">🏸</span> Badminton</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=basketball]'),'basketball'); scrollToProducts(); return false;"><span class="ni">🏀</span> Basketball</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=tennis]'),'tennis'); scrollToProducts(); return false;"><span class="ni">🎾</span> Tennis</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=swimming]'),'swimming'); scrollToProducts(); return false;"><span class="ni">🏊</span> Swimming</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=boxing]'),'boxing'); scrollToProducts(); return false;"><span class="ni">🥊</span> Boxing</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=gym]'),'gym'); scrollToProducts(); return false;"><span class="ni">🏋️</span> Gym & Fitness</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=running]'),'running'); scrollToProducts(); return false;"><span class="ni">🏃</span> Running</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=yoga]'),'yoga'); scrollToProducts(); return false;"><span class="ni">🧘</span> Yoga</a>
+	  <a class="nav-link" href="#" onclick="filterCat(document.querySelector('.cat-chip[onclick*=cycling]'),'cycling'); scrollToProducts(); return false;"><span class="ni">🚴</span> Cycling</a>
+	</div>
+
+    <div class="sb-divider"></div>
+
+    <div class="filter-head">Filters</div>
+
+    <div class="filter-block">
+      <label>Price Range</label>
+      <div class="price-row"><span>₹0</span><span id="priceVal">₹10,000</span></div>
+      <input type="range" min="0" max="50000" value="10000" step="500"
+             oninput="document.getElementById('priceVal').textContent='₹'+Number(this.value).toLocaleString('en-IN')"/>
+    </div>
+
+    <div class="filter-block">
+      <label>Brand</label>
+      <div class="check-list">
+        <label class="check-item"><input type="checkbox" checked/> Nike <span class="ci-count">48</span></label>
+        <label class="check-item"><input type="checkbox" checked/> Adidas <span class="ci-count">36</span></label>
+        <label class="check-item"><input type="checkbox"/> Puma <span class="ci-count">29</span></label>
+        <label class="check-item"><input type="checkbox"/> SS <span class="ci-count">22</span></label>
+        <label class="check-item"><input type="checkbox"/> Yonex <span class="ci-count">18</span></label>
+        <label class="check-item"><input type="checkbox"/> Decathlon <span class="ci-count">41</span></label>
+      </div>
+    </div>
+
+    <div class="filter-block">
+      <label>Rating</label>
+      <div class="rating-filter">
+        <div class="rf-item"><input type="checkbox" style="accent-color:var(--gold)"/> <span class="rf-stars">★★★★★</span> <span class="rf-label">5 Star</span></div>
+        <div class="rf-item"><input type="checkbox" style="accent-color:var(--gold)"/> <span class="rf-stars">★★★★☆</span> <span class="rf-label">4+ Star</span></div>
+        <div class="rf-item"><input type="checkbox" style="accent-color:var(--gold)"/> <span class="rf-stars">★★★☆☆</span> <span class="rf-label">3+ Star</span></div>
+      </div>
+    </div>
+
+    <div class="filter-block">
+      <label>Availability</label>
+      <div class="check-list">
+        <label class="check-item"><input type="checkbox" checked/> In Stock</label>
+        <label class="check-item"><input type="checkbox"/> Pre-Order</label>
+        <label class="check-item"><input type="checkbox"/> Express Delivery</label>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="main" id="mainContent">
+
+    <!-- HERO CAROUSEL -->
+    <div class="hero" id="hero">
+      <div class="slide slide-1 active">
+        <div class="slide-content">
+          <div class="slide-eyebrow">🏏 New Season Drop</div>
+          <div class="slide-title">RULE THE <span class="hl">PITCH</span></div>
+          <div class="slide-desc">Premium cricket gear for champions. From Kohli-grade bats to pro pads — dominate every match.</div>
+          <div class="hero-btns">
+            <button class="btn-primary">Shop Cricket →</button>
+            <button class="btn-ghost">View Offers</button>
+          </div>
+        </div>
+      </div>
+      <div class="slide slide-2">
+        <div class="slide-content">
+          <div class="slide-eyebrow">⚽ FIFA Collection</div>
+          <div class="slide-title">UNLEASH YOUR <span class="hl">GAME</span></div>
+          <div class="slide-desc">Official match balls, pro boots & training kits. Gear up like a professional.</div>
+          <div class="hero-btns">
+            <button class="btn-primary">Shop Football →</button>
+            <button class="btn-ghost">View Offers</button>
+          </div>
+        </div>
+      </div>
+      <div class="slide slide-3">
+        <div class="slide-content">
+          <div class="slide-eyebrow">🏋️ Gym Edition</div>
+          <div class="slide-title">BUILT FOR <span class="hl">STRENGTH</span></div>
+          <div class="slide-desc">Professional gym equipment, supplements & activewear to push beyond limits.</div>
+          <div class="hero-btns">
+            <button class="btn-primary">Shop Gym →</button>
+            <button class="btn-ghost">View Offers</button>
+          </div>
+        </div>
+      </div>
+      <div class="slide slide-4">
+        <div class="slide-content">
+          <div class="slide-eyebrow">👟 Running Season</div>
+          <div class="slide-title">RUN YOUR <span class="hl">WORLD</span></div>
+          <div class="slide-desc">Lightweight performance shoes & marathon gear from top global brands.</div>
+          <div class="hero-btns">
+            <button class="btn-primary">Shop Running →</button>
+            <button class="btn-ghost">View Offers</button>
+          </div>
+        </div>
+      </div>
+      <button class="slide-arr arr-l" onclick="moveSlide(-1)">‹</button>
+      <button class="slide-arr arr-r" onclick="moveSlide(1)">›</button>
+      <div class="slide-dots" id="slideDots">
+        <button class="dot active" onclick="goSlide(0)"></button>
+        <button class="dot" onclick="goSlide(1)"></button>
+        <button class="dot" onclick="goSlide(2)"></button>
+        <button class="dot" onclick="goSlide(3)"></button>
+      </div>
+    </div>
+
+    <!-- STATS STRIP -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <span class="stat-icon">🚀</span>
+        <div><div class="stat-val">Free Delivery</div><div class="stat-label">On orders above ₹999</div></div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🔄</span>
+        <div><div class="stat-val">30-Day Return</div><div class="stat-label">Hassle-free returns</div></div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🔒</span>
+        <div><div class="stat-val">Secure Pay</div><div class="stat-label">100% safe checkout</div></div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🏆</span>
+        <div><div class="stat-val">500+ Brands</div><div class="stat-label">Genuine products only</div></div>
+      </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- Categories -->
+      <div class="cat-row">
+        <div class="cat-chip on" onclick="filterCat(this,'all')"><span class="ce">🔥</span> All</div>
+        <div class="cat-chip" onclick="filterCat(this,'cricket')"><span class="ce">🏏</span> Cricket</div>
+        <div class="cat-chip" onclick="filterCat(this,'football')"><span class="ce">⚽</span> Football</div>
+        <div class="cat-chip" onclick="filterCat(this,'badminton')"><span class="ce">🏸</span> Badminton</div>
+        <div class="cat-chip" onclick="filterCat(this,'basketball')"><span class="ce">🏀</span> Basketball</div>
+        <div class="cat-chip" onclick="filterCat(this,'tennis')"><span class="ce">🎾</span> Tennis</div>
+        <div class="cat-chip" onclick="filterCat(this,'gym')"><span class="ce">🏋️</span> Gym</div>
+        <div class="cat-chip" onclick="filterCat(this,'running')"><span class="ce">👟</span> Running</div>
+        <div class="cat-chip" onclick="filterCat(this,'swimming')"><span class="ce">🏊</span> Swimming</div>
+        <div class="cat-chip" onclick="filterCat(this,'boxing')"><span class="ce">🥊</span> Boxing</div>
+        <div class="cat-chip" onclick="filterCat(this,'yoga')"><span class="ce">🧘</span> Yoga</div>
+        <div class="cat-chip" onclick="filterCat(this,'cycling')"><span class="ce">🚴</span> Cycling</div>
+      </div>
+
+      <!-- Trending Products -->
+      <div class="sec-head" id="featCollections">
+        <div class="sec-title">Trending <span class="ac">Now</span></div>
+        <button class="see-all">See All →</button>
+      </div>
+
+      <div class="prod-grid" id="productGrid">
+        <!-- Products injected by JS -->
+      </div>
+
+      <!-- FLASH SALE -->
+      <div class="flash-bar" id="flashSale">
+        <div class="flash-icon">⚡</div>
+        <div class="flash-text">
+          <div class="ft1">Flash Sale — Up to 60% OFF</div>
+          <div class="ft2">Limited time deals on top sports brands. Grab before stock runs out!</div>
+        </div>
+        <div class="flash-timer">
+          <div class="t-block"><div class="t-num" id="th">02</div><div class="t-lbl">HRS</div></div>
+          <div class="t-block"><div class="t-num" id="tm">47</div><div class="t-lbl">MIN</div></div>
+          <div class="t-block"><div class="t-num" id="ts">30</div><div class="t-lbl">SEC</div></div>
+        </div>
+        <button class="flash-cta">Shop Flash Sale 🔥</button>
+      </div>
+
+      <!-- New Arrivals -->
+      <div class="sec-head">
+        <div class="sec-title">New <span class="ac">Arrivals</span></div>
+        <button class="see-all">See All →</button>
+      </div>
+      <div class="prod-grid" id="newGrid"></div>
+
+      <!-- Featured Banners -->
+      <div class="sec-head">
+        <div class="sec-title">Featured <span class="ac">Collections</span></div>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <img src="https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=800&q=80" alt="Gym"/>
+          <div class="fc-overlay">
+            <div class="fc-tag">GYM SPECIAL</div>
+            <div class="fc-title">Power Up Your Gym</div>
+            <div class="fc-sub">Dumbbells · Barbells · Benches from ₹999</div>
+          </div>
+        </div>
+        <div class="feat-card">
+          <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80" alt="Running"/>
+          <div class="fc-overlay">
+            <div class="fc-tag">RUNNING</div>
+            <div class="fc-title">Run Faster, Go Further</div>
+            <div class="fc-sub">Nike · Adidas · Puma from ₹1,499</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Brands -->
+      <div class="sec-head">
+        <div class="sec-title">Top <span class="ac">Brands</span></div>
+      </div>
+      <div class="brand-strip">
+        <div class="brand-card"><div class="bname">NIKE</div></div>
+        <div class="brand-card"><div class="bname">ADIDAS</div></div>
+        <div class="brand-card"><div class="bname">PUMA</div></div>
+        <div class="brand-card"><div class="bname">YONEX</div></div>
+        <div class="brand-card"><div class="bname">SS</div></div>
+        <div class="brand-card"><div class="bname">MRF</div></div>
+        <div class="brand-card"><div class="bname">WILSON</div></div>
+        <div class="brand-card"><div class="bname">COSCO</div></div>
+        <div class="brand-card"><div class="bname">REEBOK</div></div>
+        <div class="brand-card"><div class="bname">SPALDING</div></div>
+      </div>
+
+      <!-- Customer Reviews -->
+      <div class="sec-head">
+        <div class="sec-title">Customer <span class="ac">Reviews</span></div>
+        <button class="see-all">See All →</button>
+      </div>
+      <div class="review-grid" id="reviewGrid"></div>
+
+    </div><!-- /content -->
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="footer-grid">
+        <div class="f-brand">
+          <div class="logo2">SportZone</div>
+          <p>Your ultimate sports destination. Premium gear, top brands, unbeatable prices — delivered to your doorstep across India.</p>
+          <div class="f-socials">
+            <div class="f-social">📘</div>
+            <div class="f-social">📷</div>
+            <div class="f-social">🐦</div>
+            <div class="f-social">▶️</div>
+          </div>
+        </div>
+        <div class="f-col">
+          <h4>Sports</h4>
+          <a href="#">Cricket</a><a href="#">Football</a><a href="#">Badminton</a>
+          <a href="#">Tennis</a><a href="#">Basketball</a><a href="#">Swimming</a>
+        </div>
+        <div class="f-col">
+          <h4>Help</h4>
+          <a href="#">Track Order</a><a href="#">Returns</a><a href="#">Size Guide</a>
+          <a href="#">FAQ</a><a href="#">Contact Us</a>
+        </div>
+        <div class="f-col">
+          <h4>Company</h4>
+          <a href="#">About Us</a><a href="#">Careers</a><a href="#">Blog</a>
+          <a href="#">Privacy Policy</a><a href="#">Terms</a>
+        </div>
+      </div>
+      <div class="f-bottom">
+        <div class="f-copy">© 2025 SportZone. Made with ❤️ in India.</div>
+        <div class="f-badges">
+          <div class="f-badge">🔒 SSL Secure</div>
+          <div class="f-badge">✅ Genuine Products</div>
+          <div class="f-badge">🚀 Fast Delivery</div>
+        </div>
+      </div>
+    </footer>
+
+  </main>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div class="toast-wrap" id="toastWrap"></div>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

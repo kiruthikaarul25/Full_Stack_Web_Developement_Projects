@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Cart – SportZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <link th:href="@{/css/card.css}" rel="stylesheet"/>
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+  </head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="menu-btn" onclick="window.location.href='/main'">←</button>
+  <div class="logo">Sport<span class="logo-white">Zone</span></div>
+  <div class="hd-right">
+    <div class="profile-pill" tabindex="0">
+      <div class="avatar" th:text="${user.firstName.substring(0,1)}">U</div>
+      <div class="profile-info">
+        <div class="pname" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="cart-page">
+  <a class="back-btn" href="/main">← Back to Shopping</a>
+  <div class="cart-title">My <span>Cart</span> 🛒</div>
+
+  <div id="cartItems"></div>
+
+  <div class="cart-summary" id="cartSummary" style="display:none">
+    <div class="cs-row">
+      <span>Subtotal</span>
+      <span id="subtotal">₹0</span>
+    </div>
+    <div class="cs-row">
+      <span>Delivery</span>
+      <span class="free-text">FREE</span>
+    </div>
+    <div class="cs-row">
+      <span>Discount</span>
+      <span class="free-text" id="discount">-₹0</span>
+    </div>
+    <div class="cs-row cs-row-total">
+      <span class="cs-total">Total</span>
+      <span class="cs-total" id="totalPrice">₹0</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- ✅ Script body கடைசியில மட்டும் — renderCart() cart.js-லயே call ஆகும் -->
+<script th:src="@{/js/card.js}"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Orders – SportZone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet"/>
+  <link th:href="@{/css/myorder.css}" rel="stylesheet"/>
+  <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+
+  <style>
+    /* Header — myorder.css-ல இல்லாததால் இங்கே */
+    .header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 24px;
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+    .menu-btn {
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--text); width: 38px; height: 38px; border-radius: 10px;
+      font-size: 1.1rem; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; transition: all 0.2s;
+    }
+    .menu-btn:hover { background: var(--accent); border-color: var(--accent); }
+    .logo {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 1px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .logo-white { -webkit-text-fill-color: #fff; }
+    .hd-right { display: flex; align-items: center; }
+    .profile-pill {
+      display: flex; align-items: center; gap: 10px; cursor: pointer;
+      padding: 6px 14px 6px 6px; border-radius: 50px;
+      background: var(--surface2); border: 1px solid var(--border);
+      transition: border-color 0.2s;
+    }
+    .profile-pill:hover { border-color: var(--accent); }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1rem; color: #fff;
+    }
+    .pname { font-weight: 700; font-size: 0.88rem; }
+    .prole { font-size: 0.72rem; color: var(--accent); font-weight: 700; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="menu-btn" onclick="window.location.href='/main'">←</button>
+  <div class="logo">Sport<span class="logo-white">Zone</span></div>
+  <div class="hd-right">
+    <div class="profile-pill">
+      <div class="avatar" th:text="${user.firstName.substring(0,1)}">U</div>
+      <div>
+        <div class="pname" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN WRAP -->
+<div class="mo-wrap">
+
+  <div class="mo-header">
+    <div class="mo-title">My <span class="ac">Orders</span></div>
+    <div class="mo-count" th:text="${orders.size()} + ' Orders'">0 Orders</div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div th:if="${#lists.isEmpty(orders)}" class="mo-empty">
+    <div class="empty-icon">📦</div>
+    <div class="empty-title">No Orders Yet!</div>
+    <div class="empty-sub">இன்னும் orders இல்லை — shopping தொடங்கு!</div>
+    <button class="empty-btn" onclick="window.location.href='/main'">🛍 Shop Now</button>
+  </div>
+
+  <!-- ORDER LIST -->
+  <div class="order-list" th:unless="${#lists.isEmpty(orders)}">
+
+    <div class="order-card" th:each="order : ${orders}">
+
+      <!-- ORDER HEADER -->
+      <div class="oc-header">
+        <div class="oc-id">
+          <span class="oc-id-label">Order ID</span>
+          <span class="oc-id-val" th:text="'#SZ' + ${order.id}">#SZ1</span>
+        </div>
+        <span class="oc-status"
+              th:classappend="${order.status}"
+              th:text="${order.status}">CONFIRMED</span>
+        <span class="oc-date"
+              th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">
+          26 May 2026
+        </span>
+        <span class="oc-total"
+              th:text="'₹' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">
+          ₹6,499
+        </span>
+      </div>
+
+      <!-- ORDER ITEMS -->
+      <div class="oc-items">
+        <div class="oc-item" th:each="item,iter : ${order.items}" th:if="${iter.index < 2}">
+          <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}"
+               onerror="this.style.display='none'"/>
+          <div>
+            <div class="oc-item-name" th:text="${item.product.name}">Product</div>
+            <div class="oc-item-meta">
+              <span th:text="${item.product.brand}">Brand</span>
+              <span>·</span>
+              <span th:text="'Qty: ' + ${item.quantity}">Qty: 1</span>
+              <span>·</span>
+              <span th:text="'₹' + ${#numbers.formatInteger(item.subtotal, 1, 'COMMA')}">₹999</span>
+            </div>
+          </div>
+        </div>
+        <div class="oc-more"
+             th:if="${order.items.size() > 2}"
+             th:text="'+' + ${order.items.size() - 2} + ' more items'">
+        </div>
+      </div>
+
+      <!-- ORDER FOOTER -->
+      <div class="oc-footer">
+        <div class="oc-addr">
+          <span>📍</span>
+          <span th:text="${order.city}">City</span>
+        </div>
+        <div class="oc-pay">
+          <span>💳</span>
+          <span th:text="${order.paymentMethod}">UPI</span>
+        </div>
+        <div class="oc-actions">
+          <button class="oc-btn-detail"
+                  th:onclick="'window.location.href=\'/order/\' + ' + ${order.id}">
+            View Details →
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

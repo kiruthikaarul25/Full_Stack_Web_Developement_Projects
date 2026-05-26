@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Order Confirmed – SportZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+<link th:href="@{/css/order.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo" onclick="window.location.href='/main'" style="cursor:pointer">Sport<span style="-webkit-text-fill-color:#fff">Zone</span><span class="logo-dot"></span></div>
+  <div class="hd-right">
+    <div class="profile-pill" tabindex="0">
+      <div class="profile-info">
+        <div class="pname" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STEPS -->
+<div class="steps-bar">
+  <div class="step done"><span class="step-num">✓</span><span class="step-lbl">Cart</span></div>
+  <div class="step-line done"></div>
+  <div class="step done"><span class="step-num">✓</span><span class="step-lbl">Checkout</span></div>
+  <div class="step-line done"></div>
+  <div class="step active"><span class="step-num">✓</span><span class="step-lbl">Confirmed</span></div>
+</div>
+
+<div class="conf-wrap">
+
+  <!-- SUCCESS BANNER -->
+  <div class="conf-banner">
+    <div class="conf-anim">
+      <div class="check-circle">
+        <span class="check-icon">✓</span>
+      </div>
+      <div class="conf-rings">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+      </div>
+    </div>
+    <h1 class="conf-title">Order Confirmed!</h1>
+    <p class="conf-sub">Thank you, <span th:text="${order.fullName}">User</span>! Your order has been placed successfully.</p>
+    <div class="conf-order-id">Order ID: <span th:text="'#SZ' + ${order.id}">SZ001</span></div>
+  </div>
+
+  <div class="conf-grid">
+
+    <!-- Order Items -->
+    <div class="conf-card">
+      <div class="conf-card-head"><span>📦</span> Items Ordered</div>
+      <div class="conf-items">
+        <div class="conf-item" th:each="item : ${order.items}">
+          <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}"/>
+          <div class="conf-item-info">
+            <div class="conf-item-name" th:text="${item.product.name}">Product</div>
+            <div class="conf-item-brand" th:text="${item.product.brand}">Brand</div>
+            <div class="conf-item-qty" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
+          </div>
+          <div class="conf-item-price" th:text="'₹' + ${#numbers.formatInteger(item.subtotal, 1, 'COMMA')}">₹999</div>
+        </div>
+      </div>
+      <div class="conf-total-row">
+        <span>Total Paid</span>
+        <span class="conf-total-amt" th:text="'₹' + ${#numbers.formatInteger(order.totalAmount, 1, 'COMMA')}">₹4,999</span>
+      </div>
+    </div>
+
+    <!-- Delivery & Payment Info -->
+    <div>
+      <div class="conf-card">
+        <div class="conf-card-head"><span>📍</span> Delivery Address</div>
+        <div class="conf-addr">
+          <div class="addr-name" th:text="${order.fullName}">Name</div>
+          <div class="addr-line" th:text="${order.address}">Address</div>
+          <div class="addr-line" th:text="${order.city + ' – ' + order.pincode}">City</div>
+          <div class="addr-line" th:text="'📞 ' + ${order.phone}">Phone</div>
+        </div>
+      </div>
+
+      <div class="conf-card">
+        <div class="conf-card-head"><span>💳</span> Payment</div>
+        <div class="pay-info-row">
+          <span class="pay-method-badge" th:text="${order.paymentMethod}">UPI</span>
+          <span class="pay-status confirmed">✓ Confirmed</span>
+        </div>
+      </div>
+
+      <div class="conf-card delivery-timeline">
+        <div class="conf-card-head"><span>🚀</span> Delivery Timeline</div>
+        <div class="timeline">
+          <div class="tl-item done">
+            <div class="tl-dot"></div>
+            <div class="tl-info">
+              <div class="tl-title">Order Placed</div>
+              <div class="tl-time" th:text="${#temporals.format(order.createdAt, 'dd MMM yyyy, hh:mm a')}">Today</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending"></div>
+            <div class="tl-info">
+              <div class="tl-title">Processing</div>
+              <div class="tl-time">1-2 hours</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending"></div>
+            <div class="tl-info">
+              <div class="tl-title">Shipped</div>
+              <div class="tl-time">1-2 days</div>
+            </div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot pending"></div>
+            <div class="tl-info">
+              <div class="tl-title">Delivered</div>
+              <div class="tl-time">3-5 days</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="conf-actions">
+    <button class="btn-orders" onclick="window.location.href='/my-orders'">📦 View My Orders</button>
+    <button class="btn-continue" onclick="window.location.href='/main'">🛍 Continue Shopping</button>
+  </div>
+
+</div>
+
+</body>
+</html>

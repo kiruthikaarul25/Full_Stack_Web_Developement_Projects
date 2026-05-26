@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Checkout – SportZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+<link th:href="@{/css/checkout.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="menu-btn" onclick="history.back()">←</button>
+  <div class="logo" onclick="window.location.href='/main'" style="cursor:pointer">Sport<span style="-webkit-text-fill-color:#fff">Zone</span><span class="logo-dot"></span></div>
+  <div class="hd-right">
+    <div class="profile-pill" tabindex="0">
+      <div class="profile-info">
+        <div class="pname" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- STEPS -->
+<div class="steps-bar">
+  <div class="step done"><span class="step-num">✓</span><span class="step-lbl">Cart</span></div>
+  <div class="step-line done"></div>
+  <div class="step active"><span class="step-num">2</span><span class="step-lbl">Checkout</span></div>
+  <div class="step-line"></div>
+  <div class="step"><span class="step-num">3</span><span class="step-lbl">Confirmation</span></div>
+</div>
+
+<div class="co-wrap">
+
+  <!-- LEFT: Form -->
+  <div class="co-left">
+
+    <!-- Delivery Address -->
+    <div class="co-card">
+      <div class="co-card-head"><span>📍</span> Delivery Address</div>
+      <form id="checkoutForm" th:action="@{/order/place}" method="post">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" name="fullName" th:value="${user.firstName + ' ' + user.lastName}" required placeholder="Enter full name"/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="text" name="phone" th:value="${user.phone}" required placeholder="10-digit mobile number" maxlength="10"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Full Address *</label>
+          <textarea name="address" required placeholder="House/Flat No, Street, Area, Landmark" rows="3"></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>City *</label>
+            <input type="text" name="city" required placeholder="City"/>
+          </div>
+          <div class="form-group">
+            <label>Pincode *</label>
+            <input type="text" name="pincode" required placeholder="6-digit pincode" maxlength="6"/>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Payment Method -->
+    <div class="co-card">
+      <div class="co-card-head"><span>💳</span> Payment Method</div>
+      <div class="pay-options">
+        <label class="pay-opt active" onclick="selectPay(this, 'UPI')">
+          <input type="radio" name="paymentMethod" value="UPI" form="checkoutForm" checked/>
+          <div class="pay-icon">📱</div>
+          <div class="pay-label">UPI</div>
+          <div class="pay-sub">GPay, PhonePe, Paytm</div>
+        </label>
+        <label class="pay-opt" onclick="selectPay(this, 'CARD')">
+          <input type="radio" name="paymentMethod" value="CARD" form="checkoutForm"/>
+          <div class="pay-icon">💳</div>
+          <div class="pay-label">Card</div>
+          <div class="pay-sub">Debit / Credit</div>
+        </label>
+        <label class="pay-opt" onclick="selectPay(this, 'COD')">
+          <input type="radio" name="paymentMethod" value="COD" form="checkoutForm"/>
+          <div class="pay-icon">💵</div>
+          <div class="pay-label">COD</div>
+          <div class="pay-sub">Cash on Delivery</div>
+        </label>
+        <label class="pay-opt" onclick="selectPay(this, 'NETBANKING')">
+          <input type="radio" name="paymentMethod" value="NETBANKING" form="checkoutForm"/>
+          <div class="pay-icon">🏦</div>
+          <div class="pay-label">Net Banking</div>
+          <div class="pay-sub">All banks</div>
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: Order Summary -->
+  <div class="co-right">
+    <div class="co-card summary-card">
+      <div class="co-card-head"><span>🛒</span> Order Summary</div>
+
+      <div class="sum-items">
+        <div class="sum-item" th:each="item : ${cartItems}">
+          <img th:src="${item.product.imageUrl}" th:alt="${item.product.name}"/>
+          <div class="sum-item-info">
+            <div class="sum-item-name" th:text="${item.product.name}">Product</div>
+            <div class="sum-item-brand" th:text="${item.product.brand}">Brand</div>
+            <div class="sum-item-qty" th:text="'Qty: ' + ${item.quantity}">Qty: 1</div>
+          </div>
+          <div class="sum-item-price" th:text="'₹' + ${#numbers.formatInteger(item.subtotal, 1, 'COMMA')}">₹999</div>
+        </div>
+      </div>
+
+      <div class="sum-divider"></div>
+
+      <div class="sum-row">
+        <span>Subtotal</span>
+        <span th:text="'₹' + ${#numbers.formatInteger(subtotal, 1, 'COMMA')}">₹4,999</span>
+      </div>
+      <div class="sum-row">
+        <span>Delivery</span>
+        <span th:if="${delivery == 0}" class="free-del">FREE</span>
+        <span th:unless="${delivery == 0}" th:text="'₹' + ${delivery}">₹99</span>
+      </div>
+      <div class="sum-row discount-row">
+        <span>Discount</span>
+        <span class="discount-amt">You're saving!</span>
+      </div>
+
+      <div class="sum-divider"></div>
+
+      <div class="sum-total">
+        <span>Total</span>
+        <span th:text="'₹' + ${#numbers.formatInteger(total, 1, 'COMMA')}">₹4,999</span>
+      </div>
+
+      <button class="place-order-btn" onclick="placeOrder()">
+        Place Order →
+      </button>
+
+      <div class="secure-note">
+        <span>🔒</span> 100% Secure Checkout
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+  function selectPay(el, val) {
+    document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function placeOrder() {
+    const form = document.getElementById('checkoutForm');
+    const inputs = form.querySelectorAll('[required]');
+    let valid = true;
+    inputs.forEach(inp => {
+      inp.classList.remove('error');
+      if (!inp.value.trim()) {
+        inp.classList.add('error');
+        valid = false;
+      }
+    });
+    if (!valid) {
+      showToast('❌', 'Please fill all required fields!');
+      return;
+    }
+    const btn = document.querySelector('.place-order-btn');
+    btn.textContent = 'Placing Order...';
+    btn.disabled = true;
+    form.submit();
+  }
+
+  function showToast(icon, msg) {
+    const wrap = document.getElementById('toastWrap');
+    const el = document.createElement('div');
+    el.className = 'toast-msg';
+    el.innerHTML = `<span class="t-icon">${icon}</span><span>${msg}</span>`;
+    wrap.appendChild(el);
+    setTimeout(() => el.classList.add('show'), 10);
+    setTimeout(() => { el.classList.remove('show'); setTimeout(() => el.remove(), 350); }, 3000);
+  }
+</script>
+</body>
+</html>

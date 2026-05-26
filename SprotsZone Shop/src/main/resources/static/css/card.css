@@ -1,0 +1,384 @@
+/* ── RESET & BASE ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #0f0f1a;
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #1a1a2e;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.5);
+}
+
+.menu-btn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.menu-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ff2d2d;
+}
+
+.logo-white {
+  color: #ffffff;
+}
+
+.hd-right {
+  display: flex;
+  align-items: center;
+}
+
+.profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 50px;
+  transition: background 0.2s;
+}
+
+.profile-pill:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ff2d2d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.pname {
+  font-weight: 700;
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+.prole {
+  font-size: 0.75rem;
+  color: #888888;
+  line-height: 1.2;
+}
+
+/* ── CART PAGE WRAPPER ── */
+.cart-page {
+  max-width: 860px;
+  margin: 100px auto 60px;
+  padding: 0 20px;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+  color: #888888;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #ffffff;
+}
+
+.cart-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 28px;
+}
+
+.cart-title span {
+  color: #ff2d2d;
+}
+
+/* ── EMPTY STATE ── */
+.empty-cart {
+  text-align: center;
+  padding: 70px 20px;
+  background: #1a1a2e;
+  border-radius: 20px;
+}
+
+.empty-icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #cccccc;
+  margin-bottom: 20px;
+}
+
+.btn-shop {
+  padding: 12px 32px;
+  background: #ff2d2d;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+  font-family: 'Nunito', sans-serif;
+}
+
+.btn-shop:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ── CART ITEM CARD ── */
+.cart-item {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: #1a1a2e;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.cart-item:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 45, 45, 0.2);
+}
+
+/* ── ITEM IMAGE ── */
+.item-img {
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 12px;
+  flex-shrink: 0;
+  background: #252540;
+}
+
+/* ── ITEM INFO ── */
+.item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-brand {
+  font-size: 0.72rem;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 4px;
+}
+
+.item-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.item-price {
+  color: #ff2d2d;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+/* ── QTY CONTROL ── */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.qty-control button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: #252540;
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-family: 'Nunito', sans-serif;
+}
+
+.qty-control button:hover {
+  background: #ff2d2d;
+}
+
+.qty-control span {
+  font-weight: 800;
+  font-size: 1rem;
+  min-width: 28px;
+  text-align: center;
+}
+
+/* ── ITEM SUBTOTAL ── */
+.item-subtotal {
+  font-weight: 800;
+  font-size: 1rem;
+  color: #ffffff;
+  min-width: 88px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* ── REMOVE BUTTON ── */
+.remove-btn {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s, color 0.2s;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.remove-btn:hover {
+  background: rgba(255, 45, 45, 0.15);
+  color: #ff2d2d;
+}
+
+/* ── CART SUMMARY ── */
+.cart-summary {
+  background: #1a1a2e;
+  border-radius: 20px;
+  padding: 28px;
+  margin-top: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cs-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 1rem;
+  color: #cccccc;
+}
+
+.cs-row-total {
+  border: none;
+  margin-top: 8px;
+  padding-top: 16px;
+}
+
+.cs-total {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #ff2d2d;
+}
+
+.free-text {
+  color: #00e676;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.checkout-btn {
+  width: 100%;
+  padding: 16px;
+  background: #ff2d2d;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: opacity 0.2s, transform 0.2s;
+  font-family: 'Nunito', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.checkout-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+.checkout-btn:active {
+  transform: translateY(0);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .cart-page {
+    margin-top: 88px;
+    padding: 0 14px;
+  }
+
+  .cart-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .item-subtotal {
+    min-width: auto;
+  }
+
+  .cart-title {
+    font-size: 1.6rem;
+  }
+
+  .item-img {
+    width: 75px;
+    height: 75px;
+  }
+}

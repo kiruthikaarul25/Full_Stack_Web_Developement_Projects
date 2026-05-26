@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title th:text="${product.name} + ' – SportZone'">Product – SportZone</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Barlow+Condensed:wght@500;700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/assets/72x72/1f3c6.png">
+<link th:href="@{/css/Product.css}" rel="stylesheet"/>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <button class="menu-btn" onclick="history.back()" title="Back">←</button>
+  <div class="logo" onclick="window.location.href='/main'" style="cursor:pointer">Sport<span style="-webkit-text-fill-color:#fff">Zone</span><span class="logo-dot"></span></div>
+  <div class="hd-right">
+    <button class="icon-btn" onclick="window.location.href='/like'">🤍</button>
+    <button class="icon-btn" onclick="window.location.href='/cart'">🛒<span class="cart-badge" id="cartCount">0</span></button>
+    <div class="profile-pill" tabindex="0">
+      <div class="profile-info">
+        <div class="pname" th:text="${user.firstName}">User</div>
+        <div class="prole">Member</div>
+      </div>
+      <div class="profile-drop">
+        <div class="pd-head">
+          <div class="av2" th:text="${user.firstName.substring(0,1)}">U</div>
+          <div>
+            <div class="pd-name" th:text="${user.firstName + ' ' + user.lastName}">User Name</div>
+            <div class="pd-email" th:text="${user.email}">user@email.com</div>
+          </div>
+        </div>
+        <div class="pd-item" onclick="window.location.href='/main'"><span>🏠</span> Home</div>
+        <div class="pd-item" onclick="window.location.href='/my-orders'"><span>📦</span> My Orders</div>
+        <div class="pd-item" onclick="window.location.href='/like'"><span>🤍</span> Wishlist</div>
+        <div class="pd-divider"></div>
+        <a class="pd-item pd-logout" th:href="@{/logout}"><span>🚪</span> Logout</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="/main">Home</a>
+  <span>›</span>
+  <a th:href="@{/main}" th:text="${product.category}">Category</a>
+  <span>›</span>
+  <span th:text="${product.name}">Product</span>
+</div>
+
+<!-- PRODUCT DETAIL -->
+<div class="pd-wrap">
+
+  <!-- LEFT: Image -->
+  <div class="pd-gallery">
+    <div class="pd-main-img">
+      <img th:src="${product.imageUrl}" th:alt="${product.name}" id="mainImg"/>
+      <div class="pd-badge-wrap">
+        <span class="pbadge hot" th:text="${product.badge?.toUpperCase()}" th:if="${product.badge != null}">HOT</span>
+      </div>
+      <button class="wish-fab" id="wishBtn" th:attr="onclick='toggleWish(' + ${product.id} + ')'">🤍</button>
+    </div>
+    <div class="pd-thumbs">
+      <div class="thumb active" th:attr="onclick='setImg(\'' + ${product.imageUrl} + '\')'">
+        <img th:src="${product.imageUrl}" th:alt="${product.name}"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Info -->
+  <div class="pd-info">
+    <div class="pd-brand" th:text="${product.brand}">Brand</div>
+    <h1 class="pd-title" th:text="${product.name}">Product Name</h1>
+
+    <!-- Rating -->
+    <div class="pd-rating-row">
+      <div class="pd-stars" th:attr="data-rating=${product.rating}">★★★★★</div>
+      <span class="pd-rating-num" th:text="${product.rating}">4.8</span>
+      <span class="pd-review-count" th:text="'(' + ${product.reviewCount} + ' reviews)'"></span>
+      <span class="pd-stock in" th:if="${product.stock > 0}">✓ In Stock</span>
+      <span class="pd-stock out" th:unless="${product.stock > 0}">✗ Out of Stock</span>
+    </div>
+
+    <!-- Price -->
+    <div class="pd-price-block">
+      <span class="pd-price" th:text="'₹' + ${#numbers.formatInteger(product.price, 1, 'COMMA')}">₹4,999</span>
+      <span class="pd-old" th:text="'₹' + ${#numbers.formatInteger(product.originalPrice, 1, 'COMMA')}" th:if="${product.originalPrice != null}">₹7,999</span>
+      <span class="pd-discount" th:text="'-' + ${product.discountPercent} + '%'" th:if="${product.discountPercent > 0}">-38%</span>
+    </div>
+    <div class="pd-savings" th:if="${product.originalPrice != null}">
+      You save ₹<span th:text="${#numbers.formatInteger(product.originalPrice - product.price, 1, 'COMMA')}">3,000</span> on this order!
+    </div>
+
+    <!-- Description -->
+    <div class="pd-desc" th:text="${product.description}">Product description here.</div>
+
+    <!-- Quantity -->
+    <div class="pd-qty-row">
+      <span class="pd-label">Quantity</span>
+      <div class="qty-ctrl">
+        <button class="qty-btn" onclick="changeQty(-1)">−</button>
+        <span class="qty-val" id="qtyVal">1</span>
+        <button class="qty-btn" onclick="changeQty(1)">+</button>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="pd-actions">
+      <button class="pd-cart-btn" th:attr="onclick='addToCartPD(' + ${product.id} + ')'">
+        🛒 Add to Cart
+      </button>
+      <button class="pd-buy-btn" th:attr="onclick='buyNow(' + ${product.id} + ')'">
+        ⚡ Buy Now
+      </button>
+    </div>
+
+    <!-- Delivery Info -->
+    <div class="pd-delivery">
+      <div class="del-item"><span>🚀</span><div><b>Free Delivery</b><br/>On orders above ₹999</div></div>
+      <div class="del-item"><span>🔄</span><div><b>30-Day Returns</b><br/>Hassle-free returns</div></div>
+      <div class="del-item"><span>✅</span><div><b>100% Genuine</b><br/>Verified product</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- RELATED PRODUCTS -->
+<div class="rel-section" th:if="${!relatedProducts.isEmpty()}">
+  <div class="sec-head" style="padding: 0 2rem;">
+    <div class="sec-title">Related <span class="ac">Products</span></div>
+  </div>
+  <div class="rel-grid">
+    <div class="prod-card" th:each="rp : ${relatedProducts}">
+      <div class="prod-img">
+        <img th:src="${rp.imageUrl}" th:alt="${rp.name}" loading="lazy"/>
+        <div class="prod-overlay">
+          <button class="quick-btn" th:attr="onclick='window.location.href=\'/product/' + ${rp.id} + '\''">View Product</button>
+        </div>
+      </div>
+      <span class="pbadge" th:classappend="${rp.badge}" th:text="${rp.badge?.toUpperCase()}">NEW</span>
+      <div class="prod-info">
+        <div class="prod-brand" th:text="${rp.brand}">Brand</div>
+        <div class="prod-name" th:text="${rp.name}">Name</div>
+        <div class="prod-price">
+          <span class="p-now" th:text="'₹' + ${#numbers.formatInteger(rp.price, 1, 'COMMA')}">₹999</span>
+          <span class="p-old" th:text="'₹' + ${#numbers.formatInteger(rp.originalPrice, 1, 'COMMA')}" th:if="${rp.originalPrice != null}">₹1,999</span>
+        </div>
+      </div>
+      <div class="prod-actions">
+        <button class="cart-btn" th:attr="onclick='addToCartPD(' + ${rp.id} + ')'">🛒 Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+<div id="thData"
+     th:attr="data-product-id=${product.id},
+              data-rating=${product.rating != null ? product.rating : 0}">
+</div>
+
+<script th:src="@{/js/product.js}"></script>
+
+</body>
+</html>
